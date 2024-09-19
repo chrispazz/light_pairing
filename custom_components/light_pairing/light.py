@@ -17,19 +17,23 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     physical_light = config_entry.data["physical_light"]
     smart_light = config_entry.data["smart_light"]
     name = config_entry.data["name"]
+    brightness_on_switch = config_entry.data.get("brightness_on_switch", 100)
+    turn_off_physical = config_entry.data.get("turn_off_physical", False)  # Booleano per decidere se spegnere anche l'interruttore fisico
 
-    async_add_entities([LightPairEntity(hass, physical_light, smart_light, name, config_entry.entry_id)])
+    async_add_entities([LightPairEntity(hass, physical_light, smart_light, name, config_entry.entry_id, brightness_on_switch, turn_off_physical)])
 
 class LightPairEntity(LightEntity):
     """Representation of the paired light with a corresponding device."""
 
-    def __init__(self, hass, physical_light, smart_light, name, entry_id):
+    def __init__(self, hass, physical_light, smart_light, name, entry_id, brightness_on_switch, turn_off_physical):
         """Initialize the light pairing."""
         self.hass = hass
         self._physical_light = physical_light
         self._smart_light = smart_light
         self._name = name
         self._entry_id = entry_id  # ID univoco del dispositivo
+        self._brightness_on_switch = brightness_on_switch  # Percentuale di luminosità per l'interruttore fisico
+        self._turn_off_physical = turn_off_physical  # Opzione per spegnere l'interruttore fisico
         self._state = None
         self._brightness = None
         self._xy_color = None
@@ -107,13 +111,15 @@ class LightPairEntity(LightEntity):
         """Turn on the light."""
         physical_state = self.hass.states.get(self._physical_light).state
 
-        # Accendi la luce fisica se è spenta
+        # Accendi la luce fisica se è spenta e applica la luminosità specificata per l'interruttore fisico
         if physical_state == STATE_OFF:
-            await self.hass.services.async_call("light", "turn_on", {"entity_id": self._physical_light})
+            await self.hass.services.async_call("light", "turn_on", {
+                "entity_id": self._physical_light,
+                "brightness_pct": self._brightness_on_switch
+            })
 
         # Se non ci sono parametri aggiuntivi (luminosità, colore), invia solo il comando turn_on alla luce smart
         if not kwargs:
-            # Nessun parametro, accendi semplicemente la luce smart
             await self.hass.services.async_call("light", "turn_on", {"entity_id": self._smart_light})
         else:
             # Se ci sono parametri come luminosità o colore, invia questi parametri
@@ -137,6 +143,11 @@ class LightPairEntity(LightEntity):
     async def async_turn_off(self, **kwargs):
         """Turn off the light."""
         await self.hass.services.async_call("light", "turn_off", {"entity_id": self._smart_light})
+
+        # Se l'opzione per spegnere anche l'interruttore fisico è abilitata, spegni l'interruttore fisico
+        if self._turn_off_physical:
+            await self.hass.services.async_call("light", "turn_off", {"entity_id": self._physical_light})
+
         self._state = STATE_OFF
         self.async_write_ha_state()
 
@@ -155,10 +166,9 @@ class LightPairEntity(LightEntity):
             self._supported_color_modes = smart_state.attributes.get(ATTR_SUPPORTED_COLOR_MODES) or ['color_temp', 'xy']
             self._supported_features = smart_state.attributes.get('supported_features', SUPPORT_BRIGHTNESS | SUPPORT_COLOR_TEMP | SUPPORT_COLOR)
         else:
-            # Se lo stato della luce smart è OFF, imposta lo stato della virtuale su OFF
-            self._state = STATE_OFF
+            self._state = STATE_OFF  # Se la luce smart è spenta, imposta lo stato su OFF
 
-        # Aggiorna lo stato della luce virtuale per riflettere gli stati aggiornati
+        # Aggiorna lo stato della luce virtuale
         self.async_write_ha_state()
 
     async def async_added_to_hass(self):
