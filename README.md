@@ -13,4 +13,4 @@ Also you can define the switch on light brightness you want when phisical switch
 2. Restart Home Assistant
 3. Go to Settings > Devices & Services.
 4. In the bottom right corner, select the Add Integration button.
-5. Follow the instructions on screen 
+5. Select Light Pairing and follow the instructions on screen 
