@@ -1,7 +1,9 @@
 # Light Pairing
 This is custom component of Home Assistant.
 
-Main pourpose of this integration is to create new Virtual Lights based on a pair if a phisical switch and a smart light bulb.
+THIS INTEGRATION HAS BEEN FULLY WRITTEN BY OPENAI WITH MY INSTRUCTIONS so I can't guarantee changes or evolutions.
+
+Main purpose of this integration is to create new Virtual Lights based on a pair if a phisical switch and a smart light bulb.
 
 Configuration allows to specify if on switch_off the phisical swith has to be switched off or only the smart bulb.
 Also you can define the switch on light brightness you want when phisical switch is operated.
@@ -11,4 +13,4 @@ Also you can define the switch on light brightness you want when phisical switch
 2. Restart Home Assistant
 3. Go to Settings > Devices & Services.
 4. In the bottom right corner, select the Add Integration button.
-5. Follow the instructions on screen 
+5. Select Light Pairing and follow the instructions on screen 
