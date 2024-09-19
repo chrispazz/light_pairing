@@ -1,0 +1,11 @@
+{
+    "domain": "light_pairing",
+    "name": "Light Pairing",
+    "documentation": "https://github.com/tuo_repo/light_pairing",
+    "requirements": [],
+    "codeowners": ["@tuo_username"],
+    "iot_class": "local_polling",
+    "version": "1.0.0",
+    "config_flow": true
+  }
+  

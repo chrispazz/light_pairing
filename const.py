@@ -1,0 +1,1 @@
+DOMAIN = "light_pairing"

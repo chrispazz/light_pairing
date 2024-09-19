@@ -1,0 +1,14 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Setup a new entity pair",
+                "data": {
+                    "physical_light": "Select your phisical light entity (switch or light)",
+                    "smart_light": "Select your smart light (light)",
+                    "name": "New Light name"
+                }
+            }
+        }
+    }
+}

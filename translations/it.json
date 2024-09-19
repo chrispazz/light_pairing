@@ -1,0 +1,14 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Configura l'abbinamento delle luci",
+                "data": {
+                    "physical_light": "Seleziona la luce o interruttore fisico",
+                    "smart_light": "Seleziona la luce smart",
+                    "name": "Nome della nuova luce"
+                }
+            }
+        }
+    }
+}
