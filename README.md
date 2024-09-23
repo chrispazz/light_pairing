@@ -1,16 +1,58 @@
-# Light Pairing
-This is custom component of Home Assistant.
+# 💡 Light Pairing Integration
 
-THIS INTEGRATION HAS BEEN FULLY WRITTEN BY OPENAI WITH MY INSTRUCTIONS so I can't guarantee changes or evolutions.
+[![Add Integration to Home Assistant](https://my.home-assistant.io/badges/config_flow_start.svg?domain=light_pairing)](https://my.home-assistant.io/redirect/config_flow_start/?domain=light_pairing)
 
-Main purpose of this integration is to create new Virtual Lights based on a pair if a phisical switch and a smart light bulb.
+**Light Pairing** is a custom [Home Assistant](https://www.home-assistant.io/) integration that allows you to combine a physical light and a smart light, creating a **new virtual entity** that intelligently manages both lights. This entire integration was developed with the assistance of artificial intelligence.
 
-Configuration allows to specify if on switch_off the phisical swith has to be switched off or only the smart bulb.
-Also you can define the switch on light brightness you want when phisical switch is operated.
+## 📋 Description
 
-## Installation
-1. Install via registering as a custom repository of HACS or by copying `light_pariring` folder into `<config directory>/custom_components`
-2. Restart Home Assistant
-3. Go to Settings > Devices & Services.
-4. In the bottom right corner, select the Add Integration button.
-5. Select Light Pairing and follow the instructions on screen 
+This integration allows you to create **light pairs** consisting of:
+
+1. **Physical Light**: A physical switch or light that controls the light fixture (with on/off functionality).
+2. **Smart Light**: A smart light entity with on/off, brightness, and color control.
+
+### 🔧 How It Works
+
+The virtual light entity acts as a unified interface to control both the physical and smart lights seamlessly, providing the following behavior:
+
+- **Turn On (ON)**:
+    - Turns on the physical light if it is off.
+    - If the physical light is already on, it turns on the smart light.
+  
+- **Turn Off (OFF)**:
+    - Turns off the smart light but leaves the physical light on (unless configured otherwise).
+
+- **Brightness Adjustment**:
+    - If the physical light is off, it turns on the physical light first and then adjusts the brightness of the smart light once it becomes available.
+
+- **Color Change**:
+    - If the physical light is off, it turns it on and then adjusts the color of the smart light once it becomes available.
+
+### 🔧 Configuration Parameters
+
+When setting up the integration, you can configure the following options:
+
+- **Brightness on Switch On**: Specify the brightness percentage (0-100%) that should be applied to the smart light when the physical light is turned on.
+  
+- **Turn Off Physical Light**: Choose whether to turn off the physical light when the virtual entity is turned off.
+
+## 🚀 Installation & Setup
+
+1. **Add the Integration**: Use the button below to add the Light Pairing integration directly to your Home Assistant instance.
+
+   [![Add Integration to Home Assistant](https://my.home-assistant.io/badges/config_flow_start.svg?domain=light_pairing)](https://my.home-assistant.io/redirect/config_flow_start/?domain=light_pairing)
+
+2. **Configure the Light Pair**:
+    - Select a **physical light** (switch or light entity).
+    - Select a **smart light** (light entity).
+    - Choose a **name** for the new virtual light.
+    - Set the **brightness percentage** for when the physical switch is turned on.
+    - Choose if the **physical light should turn off** when the virtual light is turned off.
+
+## 🧠 AI-Powered Development
+
+This integration was fully developed using **artificial intelligence** to ensure a smooth and efficient workflow. From concept to implementation, the AI provided structured code, intelligent configuration flows, and seamless user experience.
+
+## 📘 Documentation & Support
+
+For more details on how to use this integration and troubleshooting, please visit the official [Home Assistant documentation](https://www.home-assistant.io/) or refer to the community forums.
