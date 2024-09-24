@@ -52,7 +52,7 @@ class LightPairEntity(LightEntity):
         self._entry_id = entry_id
         self._brightness_on_switch = brightness_on_switch
         self._turn_off_physical = turn_off_physical
-        self._config_entry = config_entry  # Mantiene un riferimento al config_entry per futuri aggiornamenti
+        self._config_entry = config_entry  # Mantiene un riferimento al config_entry per aggiornamenti futuri
         self._state = None
         self._brightness = None
         self._xy_color = None
@@ -137,11 +137,26 @@ class LightPairEntity(LightEntity):
 
         physical_state = self.hass.states.get(self._physical_light).state
 
-        if physical_state == STATE_OFF:
-            # Accendi la luce fisica
-            await self.hass.services.async_call("light", "turn_on", {
-                "entity_id": self._physical_light
-            })
+        # Se il flag per spegnere la luce fisica è attivo, aggiorna immediatamente lo stato virtuale a "acceso"
+        if self._turn_off_physical:
+            if physical_state == STATE_OFF:
+                # Accendi la luce fisica
+                await self.hass.services.async_call("light", "turn_on", {
+                    "entity_id": self._physical_light
+                })
+
+            # Imposta immediatamente lo stato della luce virtuale su "acceso"
+            self._state = STATE_ON
+            self.async_write_ha_state()
+        else:
+            # Se il flag non è attivo, controlla lo stato della luce smart
+            smart_state = self.hass.states.get(self._smart_light)
+            if smart_state and smart_state.state == STATE_ON:
+                self._state = STATE_ON
+            else:
+                self._state = STATE_OFF
+
+            self.async_write_ha_state()
 
         # Attendere che la luce smart diventi disponibile prima di applicare la luminosità
         await self._wait_for_smart_light_available()
@@ -155,6 +170,7 @@ class LightPairEntity(LightEntity):
         else:
             await self.hass.services.async_call("light", "turn_on", {"entity_id": self._smart_light})
 
+        # Imposta lo stato su acceso una volta completata l'operazione
         self._state = STATE_ON
         self.async_write_ha_state()
 
@@ -177,7 +193,17 @@ class LightPairEntity(LightEntity):
                     await self.hass.services.async_call("light", "turn_off", {
                         "entity_id": self._physical_light
                     })
+                self._state = STATE_OFF  # Aggiorna lo stato della luce virtuale
+                self.async_write_ha_state()  # Scrivi lo stato
                 return  # Spegni subito la luce e interrompi l'attesa
+
+        # Una volta che la luce smart è disponibile, aggiorna lo stato
+        if smart_state and smart_state.state == STATE_ON:
+            self._state = STATE_ON
+        else:
+            self._state = STATE_OFF
+
+        self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs):
         """Spegne la luce."""
@@ -193,7 +219,7 @@ class LightPairEntity(LightEntity):
         # Interrompi l'attesa per la luce smart, se attiva
         self._waiting_for_smart_light = False
 
-        self._state = STATE_OFF
+        self._state = STATE_OFF  # Aggiorna lo stato della luce virtuale
         self.async_write_ha_state()
 
     async def async_update(self):
@@ -209,6 +235,9 @@ class LightPairEntity(LightEntity):
             self._color_mode = smart_state.attributes.get(ATTR_COLOR_MODE)
             self._supported_color_modes = smart_state.attributes.get(ATTR_SUPPORTED_COLOR_MODES) or ['color_temp', 'xy']
             self._supported_features = smart_state.attributes.get('supported_features', SUPPORT_BRIGHTNESS | SUPPORT_COLOR_TEMP | SUPPORT_COLOR)
+        elif physical_state.state == STATE_ON and self._turn_off_physical:
+            # Mantieni lo stato acceso se la luce fisica è accesa e il flag è attivo
+            self._state = STATE_ON
         else:
             self._state = STATE_OFF
 

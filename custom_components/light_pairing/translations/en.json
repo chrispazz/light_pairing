@@ -1,14 +1,26 @@
 {
-    "config": {
-        "step": {
-            "user": {
-                "title": "Setup a new entity pair",
-                "data": {
-                    "physical_light": "Select your phisical light entity (switch or light)",
-                    "smart_light": "Select your smart light (light)",
-                    "name": "New Light name"
-                }
-            }
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure a new light pair",
+        "data": {
+          "physical_light": "Select the physical light (switch or light)",
+          "smart_light": "Select the smart light (light)",
+          "name": "New light name",
+          "brightness_on_switch": "Brightness percentage when physical switch is turned on (0-100)",
+          "turn_off_physical": "Turn off physical switch when virtual light is turned off (yes or no)"
         }
+      },
+      "reconfigure": {
+        "title": "Reconfigure light pair",
+        "data": {
+          "physical_light": "Select the physical light (switch or light)",
+          "smart_light": "Select the smart light (light)",
+          "name": "Light name",
+          "brightness_on_switch": "Brightness percentage when physical switch is turned on (0-100)",
+          "turn_off_physical": "Turn off physical switch when virtual light is turned off (yes or no)"
+        }
+      }
     }
+  }
 }

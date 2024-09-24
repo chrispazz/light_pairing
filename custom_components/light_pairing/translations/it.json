@@ -1,14 +1,26 @@
 {
-    "config": {
-        "step": {
-            "user": {
-                "title": "Configura l'abbinamento delle luci",
-                "data": {
-                    "physical_light": "Seleziona la luce o interruttore fisico",
-                    "smart_light": "Seleziona la luce smart",
-                    "name": "Nome della nuova luce"
-                }
-            }
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configura una nuova coppia di luci",
+        "data": {
+          "physical_light": "Seleziona la luce fisica (interruttore o luce)",
+          "smart_light": "Seleziona la luce smart (luce)",
+          "name": "Nome della nuova luce",
+          "brightness_on_switch": "Percentuale di luminosità quando l'interruttore fisico è acceso (0-100)",
+          "turn_off_physical": "Spegni l'interruttore fisico quando la luce virtuale viene spenta (sì o no)"
         }
+      },
+      "reconfigure": {
+        "title": "Riconfigura la coppia di luci",
+        "data": {
+          "physical_light": "Seleziona la luce fisica (interruttore o luce)",
+          "smart_light": "Seleziona la luce smart (luce)",
+          "name": "Nome della luce",
+          "brightness_on_switch": "Percentuale di luminosità quando l'interruttore fisico è acceso (0-100)",
+          "turn_off_physical": "Spegni l'interruttore fisico quando la luce virtuale viene spenta (sì o no)"
+        }
+      }
     }
+  }
 }
